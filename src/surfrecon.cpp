@@ -246,6 +246,7 @@ int Surf::isNear(int num_threads, Face **mesh, unsigned int nTriangles, Vertex *
     int res = 0;
     unsigned int currentTriangle = 0;
     double threshold = 0.5*sqrt(vSize->x*vSize->x + vSize->y*vSize->y + vSize->z*vSize->z);
+    //double threshold = 1.0;//sqrt(vSize->x*vSize->x + vSize->y*vSize->y + vSize->z*vSize->z);
     for (currentTriangle = 0; currentTriangle < nTriangles; ++currentTriangle) {
         if (distancePointTriangle(mesh[currentTriangle], voxelCenter) <= threshold) {
             res = 1;
@@ -451,7 +452,6 @@ int Surf::voxelizeMesh(VoxelSet &voxels, Vertex *vertices, unsigned int nVertice
                         inTarget = 0;
                     }
                 }
-                
                 //
                 if (inTarget)
                 {
@@ -478,13 +478,23 @@ void Surf::surfrecon(VoxelSet pcIn, VoxelSet &voxelOut, int co, int num_threads)
     // Digne, Julie, et al. "Scale space meshing of raw data point sets." 
     // Computer Graphics Forum. Vol. 30. No. 6. Blackwell Publishing Ltd, 2011.
     //
-    Reconstruction reconstruct( 10, 200 );
-    
-    reconstruct.reconstruct_surface( points.begin(), points.end(), 4,
+    Reconstruction reconstruct(4,200);
+    //Reconstruction reconstruct(15);
+  //  for(int i=0;i<1;++i)
+  //  {
+   //   reconstruct.increase_scale(1);
+      //reconstruct.set_neighborhood_squared_radius(9);
+  //    std::cout<<"::"<<reconstruct.neighborhood_squared_radius()<<std::endl;
+      reconstruct.reconstruct_surface( points.begin(), points.end(),5,
                                     false, // Do not separate shells
                                     true // Force manifold output
                                     );
+   // }
     
+    /*reconstruct.reconstruct_surface( points.begin(), points.end(),2,
+                                    false, // Do not separate shells
+                                    true // Force manifold output
+                                    );*/
     std::cerr << " Surface reconstruction done in " << t.time() << " sec." << std::endl;
 
     //
